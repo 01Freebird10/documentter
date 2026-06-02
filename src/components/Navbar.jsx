@@ -50,8 +50,10 @@ export default function Navbar() {
                 href={link.href}
                 onClick={(e) => {
                   if (link.href.startsWith('/#')) {
-                    e.preventDefault();
-                    handleScroll(link.href);
+                    if (location.pathname === '/') {
+                      e.preventDefault();
+                      handleScroll(link.href);
+                    }
                   }
                 }}
                 className={`text-sm font-medium tracking-wide transition-colors duration-200 hover:text-white ${
@@ -105,8 +107,12 @@ export default function Navbar() {
                   href={link.href}
                   onClick={(e) => {
                     if (link.href.startsWith('/#')) {
-                      e.preventDefault();
-                      handleScroll(link.href);
+                      if (location.pathname === '/') {
+                        e.preventDefault();
+                        handleScroll(link.href);
+                      } else {
+                        setIsOpen(false);
+                      }
                     } else {
                       setIsOpen(false);
                     }

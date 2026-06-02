@@ -376,14 +376,86 @@ export const ProjectProvider = ({ children }) => {
     };
   }, [isAnalyzing, currentStageIndex, currentProject]);
 
-  const uploadZipFile = (file) => {
+  const uploadZipFile = async (file) => {
     const sizeMB = (file.size / (1024 * 1024)).toFixed(1) + ' MB';
-    startCinematicAnalysis(file.name.replace('.zip', ''), 'zip', sizeMB);
+    const projectName = file.name.replace('.zip', '');
+    
+    // 1. Kick off the cinematic scanning loading page first
+    startCinematicAnalysis(projectName, 'zip', sizeMB);
+    
+    // 2. Perform parallel multipart upload to backend for actual AST analysis
+    try {
+      const token = localStorage.getItem('accessToken');
+      const formData = new FormData();
+      formData.append('zipFile', file); // 'zipFile' matches multer input name in router
+      formData.append('projectName', projectName);
+      
+      const response = await fetch(`${API_BASE}/projects/upload`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formData
+      });
+      
+      const resData = await response.json();
+      if (response.ok) {
+        console.log('[API] Project uploaded successfully to database:', resData.data);
+        setCurrentProject(prev => {
+          if (prev) {
+            return {
+              ...prev,
+              id: resData.data._id || resData.data.id || prev.id,
+              dbProject: resData.data
+            };
+          }
+          return prev;
+        });
+      } else {
+        console.warn('[API WARNING] Backend ZIP analysis upload failed:', resData.message);
+      }
+    } catch (err) {
+      console.warn('[API EXCEPTION] Backend upload connection skipped/failed:', err.message);
+    }
   };
 
-  const connectGitHubRepo = (url) => {
+  const connectGitHubRepo = async (url) => {
     const name = url.split('/').pop().replace('.git', '') || 'github-repo';
+    
+    // 1. Kick off the cinematic scanning loading page first
     startCinematicAnalysis(name, 'github', url);
+    
+    // 2. Perform parallel clone request to backend for actual AST analysis
+    try {
+      const token = localStorage.getItem('accessToken');
+      const response = await fetch(`${API_BASE}/projects/github`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ githubUrl: url, projectName: name })
+      });
+      
+      const resData = await response.json();
+      if (response.ok) {
+        console.log('[API] GitHub repo linked successfully to database:', resData.data);
+        setCurrentProject(prev => {
+          if (prev) {
+            return {
+              ...prev,
+              id: resData.data._id || resData.data.id || prev.id,
+              dbProject: resData.data
+            };
+          }
+          return prev;
+        });
+      } else {
+        console.warn('[API WARNING] Backend GitHub cloning failed:', resData.message);
+      }
+    } catch (err) {
+      console.warn('[API EXCEPTION] Backend GitHub connection skipped/failed:', err.message);
+    }
   };
 
   const selectProjectFromHistory = (proj) => {
