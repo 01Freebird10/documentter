@@ -4,12 +4,15 @@ import { User, Mail, Lock, ShieldAlert, ArrowRight, Sparkles } from 'lucide-reac
 import { Chrome, Github } from '../components/BrandIcons';
 import { motion } from 'framer-motion';
 
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
 export default function RegisterPage() {
   const navigate = useNavigate();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
   // Password strength checkers
   const [strength, setStrength] = useState({ score: 0, label: 'Weak', color: 'bg-rose-500' });
@@ -53,15 +56,37 @@ export default function RegisterPage() {
     setStrength({ score, label, color });
   }, [password]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name || !email || !password || strength.score < 2) return;
 
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
+    setError('');
+    
+    try {
+      const response = await fetch(`${API_BASE}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password })
+      });
+      
+      const resData = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(resData.message || 'Registration failed.');
+      }
+      
+      // Store token & user profile info in localStorage
+      localStorage.setItem('accessToken', resData.data.accessToken);
+      localStorage.setItem('refreshToken', resData.data.refreshToken);
+      localStorage.setItem('user', JSON.stringify(resData.data.user));
+
       navigate('/dashboard');
-    }, 1500);
+    } catch (err) {
+      setError(err.message || 'Network error: Make sure the backend server is running.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -94,6 +119,13 @@ export default function RegisterPage() {
         {/* Auth Box */}
         <div className="glass-panel border border-border/80 rounded-2xl p-8 shadow-2xl relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-indigo-500/50 to-transparent" />
+          
+          {error && (
+            <div className="mb-4 p-3.5 bg-rose-500/10 border border-rose-500/20 rounded-xl text-xs font-semibold text-rose-400 flex items-center space-x-2">
+              <span className="shrink-0 font-bold">⚠️</span>
+              <span>{error}</span>
+            </div>
+          )}
           
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Full Name */}
