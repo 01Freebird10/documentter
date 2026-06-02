@@ -1,0 +1,122 @@
+@import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@theme {
+  --color-background: #09090B;
+  --color-surface: #111113;
+  --color-border: #27272A;
+  --color-accent-blue: #3B82F6;
+  --color-accent-indigo: #6366F1;
+  --color-accent-violet: #8B5CF6;
+
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  --animate-pulse-slow: pulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-spin-slow: spin 20s linear infinite;
+  --animate-glow-flow: glow 8s ease-in-out infinite;
+
+  @keyframes glow {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.8; }
+  }
+}
+
+@utility glass-panel {
+  background: rgba(17, 17, 19, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(39, 39, 42, 0.5);
+}
+
+@utility glass-panel-hover {
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@utility glass-card-glow {
+  background: rgba(17, 17, 19, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  box-shadow: 0 0 40px rgba(99, 102, 241, 0.04);
+}
+
+@layer base {
+  body {
+    @apply bg-background text-zinc-100 font-sans antialiased overflow-x-hidden selection:bg-indigo-500/30 selection:text-indigo-200;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight text-white;
+    font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+  }
+}
+
+/* Custom premium styles */
+.glass-panel-hover:hover {
+  background: rgba(24, 24, 27, 0.8);
+  border-color: rgba(99, 102, 241, 0.35);
+  box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.15);
+}
+
+/* Custom Premium scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #09090B;
+}
+::-webkit-scrollbar-thumb {
+  background: #27272A;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3F3F46;
+}
+
+/* Neon Aura animations */
+.aura-glow-1 {
+  background: radial-gradient(circle, rgba(99,102,241,0.18) 0%, rgba(139,92,246,0.06) 50%, rgba(9,9,11,0) 100%);
+}
+
+.aura-glow-2 {
+  background: radial-gradient(circle, rgba(59,130,246,0.14) 0%, rgba(99,102,241,0.04) 50%, rgba(9,9,11,0) 100%);
+}
+
+/* Moving grid background */
+.bg-grid-pattern {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(39, 39, 42, 0.15) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(39, 39, 42, 0.15) 1px, transparent 1px);
+}
+
+/* Animated gradient-border style */
+.gradient-border-box {
+  position: relative;
+  border-radius: 12px;
+  background: linear-gradient(#111113, #111113) padding-box,
+              linear-gradient(to right, #3B82F6, #6366F1, #8B5CF6) border-box;
+  border: 1.5px solid transparent;
+}
+
+/* Moving neon dots or particles */
+.floating-particle {
+  position: absolute;
+  background: radial-gradient(circle, rgba(99,102,241,0.4) 0%, rgba(99,102,241,0) 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(1px);
+}
+
+/* Flow line animation */
+@keyframes flowDash {
+  to {
+    stroke-dashoffset: -40;
+  }
+}
+.flow-line-animate {
+  stroke-dasharray: 10, 10;
+  animation: flowDash 2s linear infinite;
+}

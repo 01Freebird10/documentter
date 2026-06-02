@@ -1,0 +1,58 @@
+# Dependency Directories
+node_modules/
+**/node_modules/
+
+# Production Build Directories
+dist/
+dist-ssr/
+build/
+out/
+
+# Environment Variables & Secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+**/.env
+**/.env.*
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# System Files & Editor Configs
+.DS_Store
+Thumbs.db
+.vscode/
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Temporary Uploads & Clone Caches
+backend/src/uploads/*
+!backend/src/uploads/invoices/
+backend/src/uploads/invoices/*
+!backend/src/uploads/specs/
+backend/src/uploads/specs/*
+!backend/src/uploads/tmp-clones/
+backend/src/uploads/tmp-clones/*
+backend/src/uploads/tmp-extracted/*
+
+# Local Test Reports (Ignore generated test documents)
+*.pdf
+*.pptx
+*.docx
+*.png
+!public/*.png
+!src/assets/*.png

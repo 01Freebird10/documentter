@@ -1,0 +1,4 @@
+<svg><text x="10" y="20" fill="red">Mermaid Render Error: Parse error on line 4:
+...M| Database[MongoDB (Mongoose ODM) Store
+-----------------------^
+Expecting 'SQE', 'DOUBLECIRCLEEND', 'PE', '-)', 'STADIUMEND', 'SUBROUTINEEND', 'PIPE', 'CYLINDEREND', 'DIAMOND_STOP', 'TAGEND', 'TRAPEND', 'INVTRAPEND', 'UNICODE_TEXT', 'TEXT', 'TAGSTART', got 'PS'</text></svg>
